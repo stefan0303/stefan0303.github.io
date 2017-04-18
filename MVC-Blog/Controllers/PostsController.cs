@@ -14,13 +14,15 @@ namespace MVCBlog.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Posts
+        // All  Posts
+        
         public ActionResult Index()
         {
             return View(db.Posts.ToList());
         }
 
         // GET: Posts/Details/5
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -35,7 +37,7 @@ namespace MVCBlog.Controllers
             }
             return View(post);
         }
-
+        [Authorize]
         public ActionResult ShowDateTime()
         {
             DateTime date=DateTime.Now;
@@ -44,6 +46,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Posts/Create
+        [Authorize]
         public ActionResult Create()
         {            
             return View();
@@ -54,8 +57,10 @@ namespace MVCBlog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create([Bind(Include = "Id,Title,Body,Date")] Post post)
         {
+            
             if (ModelState.IsValid)
             {
                 db.Posts.Add(post);
@@ -67,6 +72,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Posts/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -86,7 +92,8 @@ namespace MVCBlog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Title,Body,Date")] Post post)
+        [Authorize(Roles = "Administrators")]
+        public ActionResult Edit([Bind(Include = "Id,Title,Body,Date,AuthorId")] Post post)
         {
             if (ModelState.IsValid)
             {
@@ -98,6 +105,7 @@ namespace MVCBlog.Controllers
         }
 
         // GET: Posts/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -113,6 +121,7 @@ namespace MVCBlog.Controllers
         }
 
         // POST: Posts/Delete/5
+        [Authorize(Roles = "Administrators")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

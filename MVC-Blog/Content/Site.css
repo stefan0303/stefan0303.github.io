@@ -34,4 +34,3 @@ textarea {
 {
      background-color: #2f4f4f !important;
 }
-@Html.TextBoxFor(m => m.ResgistrationhaseDate, "{0:dd/MM/yyyy}");
