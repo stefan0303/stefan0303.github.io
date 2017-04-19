@@ -2,23 +2,21 @@
     ViewBag.Title = "Home";
 }
 @using MVCBlog.HelpClass
-@model List<MVCBlog.Models.Post>   
-<div class="post col-md-6">     RESENT POSTS </div>
+ 
+<h2>RESENT POSTS</h2>
     @foreach (var post in Model)
     {
-        <div class="row">
-            <div class="post col-md-6">
+            <article class="post col-md-6">
                 <h2>@post.Title</h2>
                 <div>
-                    Posted on <i>@post.Date</i>
+                    Posted on: <i>@post.Date.ToString("dd/MM/yyyy")</i>@*make the date without time*@
                     @if (post.Author != null)
                 {
-                        @:by <i>@post.Author.FullName (@post.Author.UserName)</i>
-                }
+                        @:by<i>@post.Author.FullName (@post.Author.UserName)</i>
+                }                  
                 </div>
-                <p> @Utils.MakeCutText(post.Body, 200)</p>
-            </div>
-        </div>
+                <p> @Utils.MakeCutText(post.Body, 200)</p>@* make the body of the post up to 200 chars*@         
+            </article>
     }
 
     @*@foreach (var post in Model)

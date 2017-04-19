@@ -20,6 +20,7 @@ namespace MVCBlog.Controllers
             var posts = db.Posts.Include(p => p.Author).OrderByDescending(p => p.Date).Take(5);
             return View(posts.ToList());
         }
+        
 
     }
 }

@@ -20,6 +20,15 @@ namespace MVCBlog.Controllers
         {
             return View(db.Posts.ToList());
         }
+        public ActionResult GetSearch()
+        {
+
+            var posts = db.Posts.Include(p => p.Author).OrderByDescending(p => p.Date).Take(1);
+            return View(posts.ToList());
+
+            // db.Posts.Where(p => p.Body.Contains(Search().ToString())).ToList()
+
+        }
 
         // GET: Posts/Details/5
         [Authorize]
