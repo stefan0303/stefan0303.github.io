@@ -15,17 +15,22 @@ namespace MVCBlog.Controllers
         // GET: Search
         private static ApplicationDbContext db = new ApplicationDbContext();
  
-        public ActionResult IndexTwo(string search)
+        public ActionResult IndexTwo(string searchBy, string search)
         {
-
-            var posts = db.Posts.Where(x => x.Body.Contains(search)||x.Title.Contains(search)).ToList();
-         
-                return View(posts);
-            //if (posts.Count == 0)
-            //{
-            //    return View(Content("There are no results with key word {0}", search));
-            //}
-
+ 
+            switch (searchBy)
+            {
+                case "AllText":
+                    var posts = db.Posts.Where(x => x.Body.Contains(search) || x.Title.Contains(search)).ToList();
+                    return View(posts);
+                case "Title":
+                     posts = db.Posts.Where(x=>x.Title.Contains(search)).ToList();
+                    return View(posts);
+                case "Post":
+                     posts = db.Posts.Where(x => x.Body.Contains(search)).ToList();
+                    return View(posts);
+            }
+           return View(db.Posts.Where(x => x.Body.Contains(search) || x.Title.Contains(search)).ToList()); 
         }
     }
 }

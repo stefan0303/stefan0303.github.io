@@ -7,24 +7,26 @@
 @using (Html.BeginForm("IndexTwo", "Search"))
 {
     <b>Search by:</b>
-
+    @Html.RadioButton("searchBy", "AllText")<text>All Text</text>
+    @Html.RadioButton("searchBy", "Title")<text>Title</text>
+    @Html.RadioButton("searchBy", "Post")<text>Post</text><br />
     @Html.TextBox("Search");<input type="submit" value="Search" />
-
 }
-<h2>Found Posts:</h2>
-
+<h2>Found Posts: <i>@Html.ViewData.Model.Count</i></h2>@*Number of posts that the search found*@
+ 
 @foreach (var post in Model)
 {
-   
+  
     <article class="post col-md-6">
         <h2>@post.Title</h2>
         <div>
             Posted on: <i>@post.Date.ToString("dd/MM/yyyy")</i>@*make the date without time*@
             @if (post.Author != null)
-                {
+            {
                 @:by<i>@post.Author.FullName (@post.Author.UserName)</i>
-                }
+            }
         </div>
         <p> @Utils.MakeCutText(post.Body, 200)</p>@* make the body of the post up to 200 chars*@
     </article>
+   
 }

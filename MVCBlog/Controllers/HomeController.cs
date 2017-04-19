@@ -17,7 +17,7 @@ namespace MVCBlog.Controllers
         public ActionResult Index()
         {
             
-            var posts = db.Posts.Include(p => p.Author).OrderByDescending(p => p.Date).Take(5);
+            var posts = db.Posts.Include(p => p.Author).OrderByDescending(p => p.Date).Take(6);
             return View(posts.ToList());
         }
         
