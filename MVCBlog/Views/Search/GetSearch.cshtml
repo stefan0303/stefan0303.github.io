@@ -1,0 +1,14 @@
+﻿@using Insya.Localization.Annotations
+
+@ViewBag.Keyword = Search;
+
+@using (Html.BeginForm("IndexTwo", "Search"))
+{
+    <b>Search by:</b>
+
+    @Html.TextBox("Search");<input type="submit" value="Search" />
+            
+}
+   
+
+

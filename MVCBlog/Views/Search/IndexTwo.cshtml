@@ -1,0 +1,30 @@
+﻿@using MVCBlog.HelpClass
+@model List<MVCBlog.Models.Post>  
+@{
+    ViewBag.Title = "GetSearch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("IndexTwo", "Search"))
+{
+    <b>Search by:</b>
+
+    @Html.TextBox("Search");<input type="submit" value="Search" />
+
+}
+<h2>Found Posts:</h2>
+
+@foreach (var post in Model)
+{
+   
+    <article class="post col-md-6">
+        <h2>@post.Title</h2>
+        <div>
+            Posted on: <i>@post.Date.ToString("dd/MM/yyyy")</i>@*make the date without time*@
+            @if (post.Author != null)
+                {
+                @:by<i>@post.Author.FullName (@post.Author.UserName)</i>
+                }
+        </div>
+        <p> @Utils.MakeCutText(post.Body, 200)</p>@* make the body of the post up to 200 chars*@
+    </article>
+}
