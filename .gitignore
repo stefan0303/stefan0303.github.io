@@ -1,1 +1,9 @@
 MVCBlog/App_Data
+.vs/
+MVCBlog.sln.DotSettings.user
+MVCBlog.v12.suo
+MVCBlog/.vs/
+MVCBlog/bin/
+MVCBlog/obj/
+packages/
+
