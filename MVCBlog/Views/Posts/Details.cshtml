@@ -33,9 +33,19 @@
         <dd>
             @Html.DisplayFor(model => model.Date)
         </dd>
-
+        <dt>
+            @Html.DisplayNameFor(model => model.Comments)
+        </dt>
+        <dd>
+            @Html.TextArea("Comment", null, new { @rows = "4", @class = "form-control" })
+            
+        </dd>
+        <dd>
+            <input type="submit" value="Submit" class="btn btn-default" />
+        </dd>         
     </dl>
 </div>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) 
 

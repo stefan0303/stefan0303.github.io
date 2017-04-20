@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using MVCBlog.Models;
 
 namespace MVCBlog.Controllers
@@ -18,7 +19,7 @@ namespace MVCBlog.Controllers
         
         public ActionResult Index()
         {
-            return View(db.Posts.ToList());
+            return View(db.Posts.Include(p => p.Author).ToList());
         }
         public ActionResult GetSearch()
         {
@@ -72,6 +73,7 @@ namespace MVCBlog.Controllers
             
             if (ModelState.IsValid)
             {
+                post.AuthorId = User.Identity.GetUserId();
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -86,7 +88,7 @@ namespace MVCBlog.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Post post = db.Posts.Find(id);
             if (post == null)

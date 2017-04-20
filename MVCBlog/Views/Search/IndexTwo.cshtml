@@ -1,22 +1,33 @@
 ﻿@using MVCBlog.HelpClass
-@model List<MVCBlog.Models.Post>  
+@model List<MVCBlog.Models.Post>
 @{
     ViewBag.Title = "GetSearch";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @using (Html.BeginForm("IndexTwo", "Search"))
 {
-    <b>Search by:</b>
-    @Html.RadioButton("searchBy", "AllText")<text>All Text</text>
-    @Html.RadioButton("searchBy", "Title")<text>Title</text>
-    @Html.RadioButton("searchBy", "Post")<text>Post</text><br />
-    @Html.TextBox("Search");<input type="submit" value="Search" />
+
+    @Html.TextBox("Search", null,  new {@class="form-control"});
+    <button id="test" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span>&nbsp;Search</button>
+    <br />
+
+    <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-default">
+            @Html.RadioButton("searchBy", "AllText", new { @class = "form-control" })<text>All Text</text>
+        </label>
+        <label class="btn btn-default">
+            @Html.RadioButton("searchBy", "Title")<text>Title</text>
+        </label>
+        <label class="btn btn-default">
+            @Html.RadioButton("searchBy", "Post")<text>Post</text><br />
+        </label>
+    </div>
 }
 <h2>Found Posts: <i>@Html.ViewData.Model.Count</i></h2>@*Number of posts that the search found*@
- 
+
 @foreach (var post in Model)
 {
-  
+
     <article class="post col-md-6">
         <h2>@post.Title</h2>
         <div>
@@ -28,5 +39,5 @@
         </div>
         <p> @Utils.MakeCutText(post.Body, 200)</p>@* make the body of the post up to 200 chars*@
     </article>
-   
+
 }
