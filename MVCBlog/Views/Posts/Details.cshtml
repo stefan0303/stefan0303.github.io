@@ -1,8 +1,33 @@
-﻿@model MVCBlog.Models.Post
+﻿
+@model MVCBlog.ViewModels.PostCommentViewModel
+
 
 @{
     ViewBag.Title = "Details";
 }
+
+<style>
+    #new_comment_input {
+        width: 100%;
+    }
+</style>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    var post_id = @Html.DisplayFor(model => model.Post.Id);
+    
+    $(document).ready(function() {
+        $('#submit_comment_button').click(function() {
+            $.post('../AddComment',
+                { 'add_comment': 'true', 'comment_content': $('#new_comment_input').val(), 'post_id': post_id },
+                null); 
+           
+            window.location.href= window.location;//Automatic refresh the page
+        });
+       
+    });
+    
+
+</script>
 
 <h2>Post Details</h2>
 
@@ -11,43 +36,77 @@
 
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.Post.Title)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.Post.Title)
         </dd>
        
         <dt>
-            @Html.DisplayNameFor(model => model.Body)
+            @Html.DisplayNameFor(model => model.Post.Body)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Body)
+            @Html.DisplayFor(model => model.Post.Body)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Date)
+            @Html.DisplayNameFor(model => model.Post.Date)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Date)
+            @Html.DisplayFor(model => model.Post.Date)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Comments)
+            @*@Html.DisplayNameFor(model => model.Post.Comments)*@
         </dt>
         <dd>
-            @Html.TextArea("Comment", null, new { @rows = "4", @class = "form-control" })
+            @*@Html.TextArea("Comment", null, new { @rows = "4", @class = "form-control" })*@
+            @*@Html.Partial("~/Views/Comment/Create.cshtml");*@
+            @*@Html.RenderPartial("~/Views/Comment/Create.cshtml", Model.Comments, new ViewDataDictionary());*@
+            @*@{ Html.RenderPartial("~/Views/Comment/Create.cshtml"); }*@
             
+            @*@Html.ActionLink("Add Comment", "AddComment", new { id = Model.Post.Id })*@
+
+        </dd>
+        <dt>
+            New Comment:
+        </dt>
+        <dd>
+            <textarea rows="4" id="new_comment_input"></textarea>
+            <button type="button" class="btn btn-default" id="submit_comment_button">Submit comment</button>
         </dd>
         <dd>
-            <input type="submit" value="Submit" class="btn btn-default" />
-        </dd>         
+            @*<input type="submit" value="Submit" class="btn btn-default" />*@
+         
+        </dd>  
+        <dt>Comments:</dt>
+        <dd>
+            @if (Model.Comments != null)//Comments are not null for the Post
+            {
+                <table>
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <tr>
+                            <th>
+                                @comment.User.FullName (@comment.DateTime):
+                                
+                            </th>
+                            <td>
+                                @comment.Body
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </dd>
+
     </dl>
 </div>
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) 
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Post.Id }) 
 
 </p>
 <p>

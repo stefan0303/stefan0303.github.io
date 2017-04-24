@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace MVCBlog.Migrations
 {
     using Microsoft.AspNet.Identity;
@@ -36,6 +38,7 @@ namespace MVCBlog.Migrations
                     <p>Creating HTML5 took years, but W3C hopes using GitHub will speed up the process this time around. It plans to release a candidate recommendation for HTML5.1 by <b>June</b> and a full recommendation in <b>September</b>.</p>",
                     date: new DateTime(2016, 03, 27, 17, 53, 48),
                     authorUsername: "merry@gmail.com"
+                   
                 );
 
                 CreatePost(context,
@@ -98,6 +101,8 @@ namespace MVCBlog.Migrations
                 context.SaveChanges();
             }
         }
+
+      
 
         private void CreateUser(ApplicationDbContext context,
             string email, string password, string fullName)

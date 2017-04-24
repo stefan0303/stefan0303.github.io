@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MVCBlog.Models;
+using MVCBlog.ViewModels;
 
 namespace MVCBlog.Controllers
 {
@@ -33,7 +34,8 @@ namespace MVCBlog.Controllers
 
         // GET: Posts/Details/5
         [Authorize]
-        public ActionResult Details(int? id)
+        //public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
             if (id == null)
             {
@@ -45,7 +47,10 @@ namespace MVCBlog.Controllers
                 
                 return HttpNotFound();
             }
-            return View(post);
+            var viewModel = new PostCommentViewModel(id);
+            ModelState.Clear();
+            return View(viewModel);
+
         }
         [Authorize]
         public ActionResult ShowDateTime()
@@ -143,12 +148,53 @@ namespace MVCBlog.Controllers
             return RedirectToAction("Index");
         }
 
+        // TODO: resolve ambiguous signature instead of Request.Params
+        public ActionResult AddComment(int id = 0)
+        {
+            if ("true".Equals(Request.Params["add_comment"]))
+            {
+                
+                Comment comment = new Comment();
+
+                comment.PostId = Convert.ToInt32(Request.Params["post_id"]);
+                comment.Post = db.Posts.FirstOrDefault(p => p.Id == comment.PostId);
+
+                comment.UserId = User.Identity.GetUserId();
+                comment.User = db.Users.FirstOrDefault(u => u.Id == comment.UserId);
+
+                comment.Body = Request.Params["comment_content"];
+                comment.DateTime = DateTime.Now;
+
+                db.Comments.Add(comment);
+                db.SaveChanges();
+              
+                return View();
+            }
+            return View();
+        }
+        
+        //public ActionResult AddComment(Comment comment, int id)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // NEW
+        //       // comment.Moderated = false;
+
+        //        comment.PostId = id;
+        //        db.Comments.Add(comment);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Details", "Blog", new { id = id });
+        //    }
+        //    return RedirectToAction("Details", "Blog", new { id = id });
+        //}
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
                 db.Dispose();
             }
+            
             base.Dispose(disposing);
         }
     }
