@@ -12,6 +12,7 @@ namespace MVCBlog.Models
         public Comment()
         {
             this.DateTime=DateTime.Now;
+
         }
         [Key]
         public int Id { get; set; }
