@@ -26,7 +26,11 @@ namespace MVCBlog.Models
         public string Body { get; set; }
 
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
+
+        
+        //public Nullable<System.DateTime> EstPurchaseDate { get; set; }
 
         public string AuthorId { get; set; }
 

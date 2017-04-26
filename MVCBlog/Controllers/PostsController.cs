@@ -60,8 +60,10 @@ namespace MVCBlog.Controllers
         // GET: Posts/Create
         [Authorize]
         public ActionResult Create()
-        {            
-            return View();
+        {         
+            Post newPost = new Post();
+            newPost.Date = DateTime.Now;  
+            return View(newPost);
         }
 
         // POST: Posts/Create

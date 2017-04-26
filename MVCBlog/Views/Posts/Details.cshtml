@@ -23,7 +23,6 @@
             if ($('#new-comment-input').val() === '') {//prevent to comment a blank text
                 return false;
             }
-
             $.post(
                 '../AddComment',
                 { 'add_comment': 'true', 'comment_content': $('#new-comment-input').val(), 'post_id': post_id },
