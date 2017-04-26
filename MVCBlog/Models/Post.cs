@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace MVCBlog.Models
 {
@@ -23,6 +24,7 @@ namespace MVCBlog.Models
         public string Title { get; set; }
 
         [Required]
+        [AllowHtml]
         public string Body { get; set; }
 
         [DataType(DataType.Date)]
