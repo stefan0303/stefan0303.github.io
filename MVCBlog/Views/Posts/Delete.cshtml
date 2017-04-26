@@ -1,4 +1,5 @@
-﻿@model MVCBlog.Models.Post
+﻿@using Microsoft.AspNet.Identity
+@model MVCBlog.Models.Post
 
 @{
     ViewBag.Title = "Delete";
@@ -35,13 +36,22 @@
         </dd>
 
     </dl>
+    @if (Model.AuthorId == User.Identity.GetUserId())
+    {
+        using (Html.BeginForm())
+         {
+             @Html.AntiForgeryToken()
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+             <div class="form-actions no-color">
+                 <input type="submit" value="Delete" class="btn btn-default"/> |
+             </div>
+         }
     }
+    else
+    {
+        <h2>You can only delete Posts belonging to you</h2>
+    }
+    @Html.ActionLink("Back to List", "Index")
+
+
 </div>

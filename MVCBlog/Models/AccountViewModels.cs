@@ -83,6 +83,7 @@ namespace MVCBlog.Models
         
         
         [Display(Name = "FullName")]
+        
         public string FullName { get; set; }
 
     }

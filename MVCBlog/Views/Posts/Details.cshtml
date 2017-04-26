@@ -1,4 +1,5 @@
 ﻿
+@using Microsoft.AspNet.Identity
 @model MVCBlog.ViewModels.PostCommentViewModel
 
 
@@ -7,32 +8,37 @@
 }
 
 <style>
-    #new_comment_input {
+    #new-comment-input {
         width: 100%;
     }
 </style>
 <script src="../../Scripts/jquery-1.10.2.min.js"></script>
 <script>
     var post_id = @Html.DisplayFor(model => model.Post.Id);
-    
-    $(document).ready(function() {
-        $('#submit_comment_button').click(function() {
-            $.post('../AddComment',
-                { 'add_comment': 'true', 'comment_content': $('#new_comment_input').val(), 'post_id': post_id },
-                null); 
-           
-            window.location.href= window.location;//Automatic refresh the page
-        });
-       
-    });
-    
 
+    $(document).ready(function() {
+        
+
+        $('#submit-comment-button').click(function() {
+            if ($('#new-comment-input').val() === '') {//prevent to comment a blank text
+                return false;
+            }
+
+            $.post(
+                '../AddComment',
+                { 'add_comment': 'true', 'comment_content': $('#new-comment-input').val(), 'post_id': post_id },
+                function(data) {
+                    $('#comments-table tbody').append('<tr><td><strong>' + data.comment_author + '(' + data.comment_date +')' + '</strong></td><td>' + data.comment_body + '</td></tr>');
+                    $('#new-comment-input').val('');//make the field blank after comment
+                });
+        });
+    });
 </script>
 
 <h2>Post Details</h2>
 
 <div>
-    
+
 
     <dl class="dl-horizontal">
         <dt>
@@ -42,7 +48,7 @@
         <dd>
             @Html.DisplayFor(model => model.Post.Title)
         </dd>
-       
+
         <dt>
             @Html.DisplayNameFor(model => model.Post.Body)
         </dt>
@@ -66,7 +72,7 @@
             @*@Html.Partial("~/Views/Comment/Create.cshtml");*@
             @*@Html.RenderPartial("~/Views/Comment/Create.cshtml", Model.Comments, new ViewDataDictionary());*@
             @*@{ Html.RenderPartial("~/Views/Comment/Create.cshtml"); }*@
-            
+
             @*@Html.ActionLink("Add Comment", "AddComment", new { id = Model.Post.Id })*@
 
         </dd>
@@ -74,30 +80,33 @@
             New Comment:
         </dt>
         <dd>
-            <textarea rows="4" id="new_comment_input"></textarea>
-            <button type="button" class="btn btn-default" id="submit_comment_button">Submit comment</button>
+            <textarea rows="4" id="new-comment-input"></textarea>
+            <button type="button" class="btn btn-default" id="submit-comment-button">Submit comment</button>
         </dd>
         <dd>
             @*<input type="submit" value="Submit" class="btn btn-default" />*@
-         
-        </dd>  
+
+        </dd>
         <dt>Comments:</dt>
         <dd>
             @if (Model.Comments != null)//Comments are not null for the Post
             {
-                <table>
-                    @foreach (var comment in Model.Comments)
-                    {
-                        <tr>
-                            <th>
-                                @comment.User.FullName (@comment.DateTime):
-                                
-                            </th>
-                            <td>
-                                @comment.Body
-                            </td>
-                        </tr>
-                    }
+                <table id="comments-table">
+                    <thead></thead>
+                    <tbody>
+                        @foreach (var comment in Model.Comments)
+                        {
+                            <tr>
+                                <th>
+                                    @comment.User.FullName (@comment.DateTime):
+
+                                </th>
+                                <td>
+                                    @comment.Body
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
             }
         </dd>
@@ -106,8 +115,10 @@
 </div>
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Post.Id }) 
-
+    @if (Model.Post.AuthorId == User.Identity.GetUserId())
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Post.Id })
+    }
 </p>
 <p>
     @Html.ActionLink("Back to List", "Index")

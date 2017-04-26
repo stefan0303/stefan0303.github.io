@@ -37,10 +37,7 @@ namespace MVCBlog.Controllers
         //public ActionResult Details(int? id)
         public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            
             Post post = db.Posts.Find(id);
             if (post == null)
             {
@@ -48,7 +45,7 @@ namespace MVCBlog.Controllers
                 return HttpNotFound();
             }
             var viewModel = new PostCommentViewModel(id);
-            ModelState.Clear();
+           
             return View(viewModel);
 
         }
@@ -78,8 +75,12 @@ namespace MVCBlog.Controllers
             
             if (ModelState.IsValid)
             {
+                string userName = User.Identity.GetUserName();//take the current username
+                var userId = db.Users.Where(u => u.UserName ==userName).Select(u=>u.Id).ToList();//find the userName i database
+                //post.AuthorId =userId[0];//make the foreign key               
                 post.AuthorId = User.Identity.GetUserId();
-                db.Posts.Add(post);
+                post.Author= db.Users.FirstOrDefault(p => p.Id == post.AuthorId);
+                db.Posts.Add(post); //add the post to data
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -100,6 +101,7 @@ namespace MVCBlog.Controllers
             {
                 return HttpNotFound();
             }
+           
             return View(post);
         }
 
@@ -108,43 +110,48 @@ namespace MVCBlog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrators")]
         public ActionResult Edit([Bind(Include = "Id,Title,Body,Date,AuthorId")] Post post)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(post).State = EntityState.Modified;
+                post.AuthorId = User.Identity.GetUserId(); // TODO: not overwriting instead of 
+                post.Author = db.Users.FirstOrDefault(p => p.Id == post.AuthorId);
                 db.SaveChanges();
                 return RedirectToAction("Index");
+              
             }
+           
             return View(post);
         }
 
         // GET: Posts/Delete/5
         [Authorize]
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Post post = db.Posts.Find(id);
             if (post == null)
             {
                 return HttpNotFound();
             }
+
             return View(post);
         }
 
         // POST: Posts/Delete/5
-        [Authorize(Roles = "Administrators")]
+        //[Authorize(Roles = "Administrators")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Post post = db.Posts.Find(id);
-            db.Posts.Remove(post);
-            db.SaveChanges();
+            //Check is this the author of the post
+            var postRemove = db.Posts.FirstOrDefault(p => p.Id == id);
+            if (postRemove != null && postRemove.AuthorId == User.Identity.GetUserId())
+            {
+                Post post = db.Posts.Find(id);
+                db.Posts.Remove(post);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 
@@ -167,8 +174,9 @@ namespace MVCBlog.Controllers
 
                 db.Comments.Add(comment);
                 db.SaveChanges();
-              
-                return View();
+
+                //return View();
+                return Json(new { comment_body = comment.Body, comment_date = comment.DateTime.ToString(), comment_author = comment.User.FullName });
             }
             return View();
         }

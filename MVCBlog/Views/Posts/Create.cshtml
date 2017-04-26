@@ -47,6 +47,18 @@
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
+        @*Image*@
+                @*
+          <div class="form-group">
+            @Html.Label("image", "Post image", new { @class = "control-label col-cm-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+                *@
+        
+        @*Image*@
     </div>
 }
 

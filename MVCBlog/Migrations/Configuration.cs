@@ -9,7 +9,7 @@ namespace MVCBlog.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
+    public sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
         {
@@ -162,7 +162,7 @@ namespace MVCBlog.Migrations
             post.Title = title;
             post.Body = body;
             post.Date = date;
-            post.Author = context.Users.Where(u => u.UserName == authorUsername).FirstOrDefault();
+            post.Author = context.Users.FirstOrDefault(u => u.UserName == authorUsername);
             context.Posts.Add(post);
         }
     }
